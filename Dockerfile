@@ -6,7 +6,8 @@ RUN \
   apk --update --no-progress add \
   bash unzip inotify-tools wget 
 
-RUN apk add --no-cache freetype libpng libjpeg-turbo freetype-dev libpng-dev libjpeg-turbo-dev && \
+RUN apk --update add --no-cache freetype libpng libjpeg-turbo freetype-dev libpng-dev libjpeg-turbo-dev libxml2-dev \
+                                libmcrypt libmcrypt-dev && \
   docker-php-ext-configure gd \
     --with-gd \
     --with-freetype-dir=/usr/include/ \
@@ -14,7 +15,7 @@ RUN apk add --no-cache freetype libpng libjpeg-turbo freetype-dev libpng-dev lib
     --with-jpeg-dir=/usr/include/ && \
   NPROC=$(grep -c ^processor /proc/cpuinfo 2>/dev/null || 1) && \
   docker-php-ext-install -j${NPROC} gd && \
-  docker-php-ext-install -j$(nproc) iconv intl xml soap mcrypt opcache pdo pdo_mysql mysqli mbstring && \
+  docker-php-ext-install -j${NPROC} iconv xml mcrypt pdo pdo_mysql mysqli mbstring && \
   apk del --no-cache freetype-dev libpng-dev libjpeg-turbo-dev      
 
 WORKDIR /
